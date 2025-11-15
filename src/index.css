@@ -1,0 +1,623 @@
+body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: sans-serif;
+}
+
+header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #1565c0;
+    font-family: cursive;
+    font-weight: bold;
+    font-size: 2em;
+    font-style: normal;
+    margin-bottom: 5em;
+}
+/* Theme variables (blue and black) */
+:root {
+    --bg: #e3f2fd; /* page background (light blue) */
+    --card: #ffffff; /* card background (white) */
+    --tile: #f3f7ff; /* tile background (very light blue) */
+    --tile-hover: #e1ecf7; /* tile hover (light blue) */
+    --accent: #1565c0; /* accent/primary blue */
+    --muted-border: rgba(21, 101, 192, 0.08);
+    --text: #000000;
+}
+
+/* Page background */
+html, body {
+    height: 100%;
+    background: var(--bg);
+    margin: 0;
+    scrollbar-width: none;
+}
+
+/* Card container for the login options */
+.LoginPage {
+    width: 360px;
+    max-width: calc(100% - 32px);
+    background: var(--card);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px var(--muted-border);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+.LoginPage h2 {
+    margin: 0;
+    padding: 14px 18px;
+    text-align: center;
+    background: var(--tile);
+    border-radius: 8px;
+    border: 1px solid rgba(21,101,192,0.12);
+    cursor: pointer;
+    transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+    color: var(--accent);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.LoginPage h2:hover {
+    background: var(--tile-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(21, 101, 192, 0.06);
+}
+
+/* Smaller screens */
+@media (max-width: 420px) {
+    .LoginPage {
+        padding: 18px;
+    }
+    .LoginPage h2 {
+        padding: 12px 14px;
+        font-size: 15px;
+    }
+}
+
+/* Student form styles */
+.student-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.student-label {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: bold;
+}
+
+.student-input {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(21,101,192,0.12);
+    background: #ffffff;
+    outline: none;
+    font-size: 14px;
+    color: var(--text);
+    transition: box-shadow 120ms ease, border-color 120ms ease;
+}
+
+.student-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 6px 18px rgba(21, 101, 192, 0.06);
+}
+
+.student-btn {
+    appearance: none;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, var(--accent), #0d47a1);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+}
+
+.student-btn:active {
+    transform: translateY(1px) scale(0.998);
+}
+
+.student-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Back link/button on student page */
+.back-link {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--accent);
+    font-weight: 600;
+    padding: 6px 0 0 0;
+    cursor: pointer;
+    align-self: flex-start; /* keep back button on the left */
+    margin-bottom: 12px; /* space between back button and heading */
+}
+
+.back-link:focus {
+    outline: 2px solid rgba(21,101,192,0.18);
+    border-radius: 6px;
+}
+
+/* Field error message */
+.field-error {
+    color: #b91c1c;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.student-input[aria-invalid="true"] {
+    border-color: #f87171; /* red-400 */
+    box-shadow: 0 6px 18px rgba(248, 113, 113, 0.06);
+}
+
+/* Larger title on the student page */
+.LoginPage.student-page h2 {
+    font-size: 20px;
+    letter-spacing: 0.2px;
+    cursor: default;
+    pointer-events: none; /* prevent hover/click behavior */
+}
+
+.LoginPage.student-page h2:hover {
+    transform: none;
+    box-shadow: none;
+    background: var(--card);
+}
+
+/* Student profile styles */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    width: 60vw;
+    min-height: 100vh;
+    background: var(--bg);
+    padding: 24px 40px;
+    box-sizing: border-box;
+    scrollbar-track-color: red;
+}
+
+.profile-card {
+    width: 100%;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.profile-header {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 999px;
+    background: var(--tile);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 28px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-name {
+    font-weight: 700;
+    font-size: 20px;
+    color: #000000;
+}
+
+.profile-meta {
+    font-size: 14px;
+    color: #333333;
+    font-weight: 600;
+}
+
+.profile-divider {
+    border: none;
+    border-top: 1px solid rgba(21, 101, 192, 0.12);
+    margin: 16px 0;
+}
+
+.subjects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 52px;
+}
+
+.subject-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border-radius: 8px;
+    background: var(--tile);
+}
+
+.subject-item.active {
+    outline: 2px solid rgba(21,101,192,0.12);
+}
+
+.subject-title {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 16px;
+}
+
+
+
+.subject-btn {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(21,101,192,0.12);
+    background: white;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.subject-btn :hover{
+    cursor: pointer;
+}
+
+.subject-details {
+    flex: 1;
+    background: var(--card);
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px var(--muted-border);
+}
+
+.subject-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+}
+
+.subject-details-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.attendance-table th,
+.attendance-table td {
+    border: 1px solid rgba(0,0,0,0.06);
+    padding: 8px 10px;
+    text-align: left;
+}
+
+.subject-actions {
+    margin-top: 14px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 880px) {
+    .profile-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .profile-card {
+        width: 100%;
+    }
+}
+
+
+/* Teacher page heading should also be plain text (not clickable) */
+.LoginPage.teacher-page h2 {
+    font-size: 20px;
+    letter-spacing: 0.2px;
+    cursor: default;
+    pointer-events: none;
+}
+
+.LoginPage.teacher-page h2:hover {
+    transform: none;
+    box-shadow: none;
+    background: var(--card);
+}
+.subject-details-title {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0; 
+    border-bottom: 2px solid var(--muted-border);
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+/* Thematic Table Styling */
+.themed-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background-color: var(--card); 
+    border-radius: 8px;
+    overflow: hidden; 
+}
+
+.themed-table th, .themed-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--muted-border); 
+}
+
+.themed-table th {
+    background-color: var(--accent); 
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.05em;
+}
+
+.themed-table tbody tr:hover {
+    background-color: var(--tile); 
+}
+
+.status-present {
+    color: #2e7d32; 
+    font-weight: bold;
+}
+
+.status-absent {
+    color: #c62828;
+    font-weight: bold;
+}
+
+.subject-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+}
+.attendance-summary-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px var(--muted-border);
+    border: 1px solid var(--muted-border);
+}
+
+.attendance-summary-card h4 {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--accent);
+    border-bottom: 1px solid var(--muted-border);
+    padding-bottom: 10px;
+}
+
+.summary-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding-top: 15px;
+}
+
+.summary-stats {
+    display: flex;
+    flex-grow: 1; 
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    padding-left: 20px;
+    border-left: 1px solid #eee;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px;
+    
+}
+
+.stat-value {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.85em;
+    font-weight: 500;
+    margin-top: 5px;
+    text-transform: uppercase;
+}
+
+.stat-label.present {
+    color: #2e7d32; 
+}
+
+.stat-label.absent {
+    color: #c62828; 
+}
+
+.percentage-display {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.percentage-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    min-width: 80px;
+}
+
+.percentage-text .present {
+    font-size: 2.5em;
+    font-weight: 800;
+    color: #2e7d32;
+    line-height: 1;
+}
+
+.percentage-text .label {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.pie-chart-placeholder {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 5px rgba(0,0,0,0.05);
+}
+
+@media (max-width: 600px) {
+    .summary-content {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .summary-stats {
+        border-left: none;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+        margin-top: 15px;
+        padding-left: 0;
+        justify-content: space-between;
+    }
+    .stat-item {
+        border-right: none;
+        flex: 1;
+    }
+}
+
+.status-select {
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+.status-select.status-present {
+    color: #2e7d32; /* Dark Green */
+    border-color: #a5d6a7;
+}
+
+.status-select.status-absent {
+    color: #c62828; /* Dark Red */
+    border-color: #ef9a9a;
+}
+
+/* fileName: index.css (Append these styles) */
+
+/* --- Side-by-Side Table Layout for Large Lists --- */
+.attendance-tables-wrapper {
+    display: flex;
+    gap: 30px; /* Space between the two columns/tables */
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.attendance-table-column {
+    /* Each column takes up half the space, allowing it to grow and shrink */
+    flex: 1 1 50%; 
+    min-width: 300px; /* Minimum width to prevent tables from collapsing too much */
+}
+
+/* Responsive adjustment: Stack the tables on smaller screens */
+@media (max-width: 1000px) {
+    .attendance-tables-wrapper {
+        flex-direction: column;
+        gap: 40px; /* More vertical space when stacked */
+    }
+    .attendance-table-column {
+        flex: 1 1 100%;
+        min-width: auto;
+    }
+}
+
+
+
+
+
+/* fileName: index.css (Append these styles) */
+
+/* Ensure the card itself allows content to scroll */
+.profile-card {
+    /* Set a max height so the card doesn't overflow the viewport */
+    max-height: 90vh; 
+    /* Enable vertical scrolling within the card */
+    overflow-y: auto; 
+    /* This establishes a new stacking context for position: sticky */
+    position: relative; 
+    display: flex; /* For flexible internal layout */
+    flex-direction: column;
+}
+
+/* Make the profile header sticky at the top */
+.profile-header.fixed-header {
+    position: sticky;
+    top: 0;
+    /* Ensure the header stays above scrolling content */
+    z-index: 10; 
+    /* Use the card background color to hide content scrolling underneath */
+    background-color: var(--card); 
+    padding: 15px 0 15px 0; /* Add top/bottom padding for spacing */
+    margin: 0;
+}
+
+/* Make the horizontal divider sticky right below the header */
+.profile-divider.fixed-divider {
+    position: sticky;
+    top: calc(15px + 100px); /* Adjust based on the header height (avatar height ~ 70px + padding) */
+    z-index: 10;
+    margin-top: 0;
+    margin-bottom: 20px;
+    background-color: var(--card); /* Match card background to blend */
+    border-color: var(--muted-border);
+}
+
+/* Ensure the scrollable content starts below the fixed header */
+.scrollable-content {
+    /* No special styles needed, it just occupies the remaining space and scrolls */
+    flex-grow: 1;
+}
+
+/* Style for the new section title (like "Actions") */
+.section-title {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 15px;
+}
