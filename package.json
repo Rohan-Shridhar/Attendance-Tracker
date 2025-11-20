@@ -8,7 +8,7 @@
     "@vitejs/plugin-react": "^5.1.1",
     "gh-pages": "^6.3.0"
   },
-  "homepage": "https://rohans-cs24.github.io/attendance",
+  "homepage": "https://rohan-shridhar.github.io/Attendance-Tracker/",
   "scripts": {
   "dev": "vite",
   "build": "vite build",
