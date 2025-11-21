@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { STUDENTS_DB } from './database';
-import studentIcon from './student.png';
+import studentIcon from './assets/student.png';
 
 export default function Studentlogin({ onNavigate = () => {} }) {
   const [usn, setUsn] = useState('');

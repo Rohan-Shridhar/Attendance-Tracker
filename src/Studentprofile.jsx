@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { STUDENTS_DB, SUBJECTS } from "./database";
 import Subjectdetails from "./Subjectdetails"; 
-import studentAvatar from './student.gif';
+import studentAvatar from './assets/student.gif';
 import { LogoutIcon } from './ThemeToggle.jsx';
 
 export default function Studentprofile({ onNavigate, usn = null }) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ATTENDANCE_DB, STUDENTS_DB } from "./database";
-import classIcon from './class.gif';
+import classIcon from './assets/class.gif';
 
 const getTodayDateString = () => {
     const today = new Date();

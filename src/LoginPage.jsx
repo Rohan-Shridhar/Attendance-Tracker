@@ -1,5 +1,5 @@
-import studentIcon from './student.png';
-import teacherIcon from './teacher.png';
+import studentIcon from './assets/student.png';
+import teacherIcon from './assets/teacher.png';
 
 function LoginPage({ onNavigate = () => {} }){
     return(

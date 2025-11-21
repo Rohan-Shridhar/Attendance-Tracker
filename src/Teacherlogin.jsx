@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TEACHERS_DB } from './database';
-import teacherIcon from './teacher.png';
+import teacherIcon from './assets/teacher.png';
 
 export default function Teacherlogin({ onNavigate = () => {} }) {
   const [email, setEmail] = useState('');

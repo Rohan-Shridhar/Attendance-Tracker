@@ -1,6 +1,6 @@
 import React from 'react';
 import { TEACHERS_DB } from './database';
-import teacherAvatar from './teacher.gif';
+import teacherAvatar from './assets/teacher.gif';
 import { LogoutIcon } from './ThemeToggle.jsx';
 
 export default function Teacherprofile({ onNavigate = () => {}, teacherEmail = null }) {
