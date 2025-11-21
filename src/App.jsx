@@ -5,7 +5,8 @@ import Studentlogin from './Studentlogin.jsx';
 import Teacherlogin from './Teacherlogin.jsx';
 import Studentprofile from './Studentprofile.jsx';
 import Teacherprofile from './Teacherprofile.jsx'; 
-import PreviousAttendance from './Previousattendance.jsx'; 
+import PreviousAttendance from './Previousattendance.jsx';
+import MarkAttendance from './Markattendance.jsx';
 
 function App() {
     const [route, setRoute] = useState('home');
@@ -15,7 +16,7 @@ function App() {
 
     const navigate = (to) => {
         if (to.startsWith('student-profile:')) {
-            const usn = to.split(':')[1];
+            const usn = to.split(':')[1]; 
             setStudentUsn(usn);
             setRoute('student-profile');
         } 
@@ -26,9 +27,7 @@ function App() {
             setTeacherEmail(email);
             setTeacherSubject(subject);
             setRoute('teacher-dashboard'); 
-        } 
-        // NEW ROUTE: Mark Attendance
-        else if (to.startsWith('mark-attendance:')) {
+        } else if (to.startsWith('mark-attendance:')) {
             const subject = to.split(':')[1];
             setTeacherSubject(subject);
             setRoute('mark-attendance');

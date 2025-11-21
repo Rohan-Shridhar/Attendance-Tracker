@@ -3,56 +3,144 @@ body{
         justify-content: center;
         align-items: center;
         font-family: sans-serif;
-}
+} 
 
 header{
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #1565c0;
+    color: var(--accent);
     font-family: cursive;
     font-weight: bold;
     font-size: 2em;
     font-style: normal;
     margin-bottom: 5em;
 }
-/* Theme variables (blue and black) */
+/* --- THEME DEFINITIONS --- */
+
+/* Default Theme 1: black-white */
 :root {
-    --bg: #e3f2fd; /* page background (light blue) */
-    --card: #ffffff; /* card background (white) */
-    --tile: #f3f7ff; /* tile background (very light blue) */
-    --tile-hover: #e1ecf7; /* tile hover (light blue) */
-    --accent: #1565c0; /* accent/primary blue */
-    --muted-border: rgba(21, 101, 192, 0.08);
+    --bg: #ffffff;
+    --card: #f9f9f9;
+    --tile: #f0f0f0;
+    --tile-hover: #e0e0e0;
+    --accent: #000000;
+    --muted-border: rgba(0, 0, 0, 0.1);
     --text: #000000;
+}
+
+/* Theme 2: white-black */
+[data-theme='white-black'] {
+    --bg: #000000;
+    --card: #1a1a1a;
+    --tile: #2c2c2c;
+    --tile-hover: #3d3d3d;
+    --accent: #ffffff;
+    --muted-border: rgba(255, 255, 255, 0.1);
+    --text: #ffffff;
+}
+
+/* Specific override for the subject button in the white-on-black theme */
+[data-theme='white-black'] .subject-btn {
+    background: #ffffff; /* Ensure button is white */
+    color: #000000; /* Black text for contrast on the white button */
+}
+
+/* Specific override for the themed table in the white-on-black theme */
+[data-theme='white-black'] .themed-table th {
+    color: #000000; /* Black text for header on white background */
+}
+
+[data-theme='white-black'] .themed-table td {
+    color: var(--text); /* Ensure table data uses the theme's text color */
+}
+
+
+/* Theme 3: red-pink */
+[data-theme='red-pink'] {
+    --bg: #ffebee; /* Light Pink */
+    --card: #ffffff;
+    --tile: #ffcdd2;
+    --tile-hover: #ef9a9a;
+    --accent: #e53935; /* A more fiery red */
+    --muted-border: rgba(198, 40, 40, 0.1);
+    --text: #b71c1c; /* Darkest Red */
+}
+
+/* Theme 4: blue-grey */
+[data-theme='blue-grey'] {
+    --bg: #eceff1; /* Blue Grey 50 */
+    --card: #ffffff;
+    --tile: #cfd8dc; /* Blue Grey 200 */
+    --tile-hover: #b0bec5; /* Blue Grey 300 */
+    --accent: #03A9F4; /* Sky Blue */
+    --muted-border: rgba(3, 169, 244, 0.1);
+    --text: #0288D1; /* A slightly darker Sky Blue for readability */
+}
+
+/* General label for input fields */
+.input-label {
+    color: var(--text);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Styling for GIF icons next to inputs */
+.input-icon {
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: var(--tile);
+    padding: 4px;
+    box-shadow: 0 2px 6px var(--muted-border);
 }
 
 /* Page background */
 html, body {
     height: 100%;
-    background: var(--bg);
+    background-color: var(--bg);
+    /* Subtle repeating plus pattern using an inline SVG */
     margin: 0;
     scrollbar-width: none;
 }
 
 /* Card container for the login options */
 .LoginPage {
-    width: 360px;
+    width: 480px;
     max-width: calc(100% - 32px);
     background: var(--card);
-    padding: 24px;
+    padding: 40px;
     border-radius: 12px;
     box-shadow: 0 8px 24px var(--muted-border);
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 20px;
     align-items: stretch;
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
 
+.login-prompt {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+    opacity: 0.7;
+    margin: 0 0 10px 0;
+}
+
+.login-icon {
+    height: 64px;
+    transition: transform 200ms ease;
+}
+
+.login-icon:hover {
+    transform: scale(1.15);
+}
+
 .LoginPage h2 {
     margin: 0;
-    padding: 14px 18px;
+    padding: 18px 22px;
     text-align: center;
     background: var(--tile);
     border-radius: 8px;
@@ -60,7 +148,7 @@ html, body {
     cursor: pointer;
     transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
     color: var(--accent);
-    font-size: 16px;
+    font-size: 22px;
     font-weight: 600;
 }
 
@@ -99,7 +187,7 @@ html, body {
     padding: 10px 12px;
     border-radius: 8px;
     border: 1px solid rgba(21,101,192,0.12);
-    background: #ffffff;
+    background: var(--card);
     outline: none;
     font-size: 14px;
     color: var(--text);
@@ -162,18 +250,49 @@ html, body {
     box-shadow: 0 6px 18px rgba(248, 113, 113, 0.06);
 }
 
+/* Captcha Styles */
+.captcha-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.captcha-text {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 24px;
+    letter-spacing: 4px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    background-color: var(--tile);
+    color: var(--text);
+    text-decoration: line-through;
+    user-select: none;
+}
+
+.captcha-refresh-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
 /* Larger title on the student page */
 .LoginPage.student-page h2 {
     font-size: 20px;
     letter-spacing: 0.2px;
     cursor: default;
-    pointer-events: none; /* prevent hover/click behavior */
+    pointer-events: none;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 16px;
 }
 
 .LoginPage.student-page h2:hover {
     transform: none;
-    box-shadow: none;
-    background: var(--card);
 }
 
 /* Student profile styles */
@@ -190,7 +309,7 @@ html, body {
 
 .profile-card {
     width: 100%;
-    background: transparent;
+    background: var(--bg);
     padding: 0;
     border-radius: 0;
     box-shadow: none;
@@ -217,6 +336,13 @@ html, body {
     font-weight: 700;
     color: var(--accent);
     font-size: 28px;
+    overflow: hidden; /* This will clip the image to make it circular */
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the area without distortion */
 }
 
 .profile-info {
@@ -227,13 +353,13 @@ html, body {
 .profile-name {
     font-weight: 700;
     font-size: 20px;
-    color: #000000;
+    color: var(--text);
 }
 
 .profile-meta {
     font-size: 14px;
-    color: #333333;
     font-weight: 600;
+    color: var(--text);
 }
 
 .profile-divider {
@@ -274,14 +400,22 @@ html, body {
     padding: 10px 14px;
     border-radius: 8px;
     border: 1px solid rgba(21,101,192,0.12);
-    background: white;
+    background: #ffffff;
     color: var(--accent);
     font-weight: 700;
     font-size: 14px;
+    transition: all 150ms ease;
+    cursor: pointer;
 }
 
-.subject-btn :hover{
-    cursor: pointer;
+.subject-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--muted-border);
+}
+
+.subject-btn:disabled {
+    cursor: not-allowed;
+    transform: none; /* Prevent hover effect when disabled */
 }
 
 .subject-details {
@@ -340,12 +474,15 @@ html, body {
     letter-spacing: 0.2px;
     cursor: default;
     pointer-events: none;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 16px;
 }
 
 .LoginPage.teacher-page h2:hover {
     transform: none;
-    box-shadow: none;
-    background: var(--card);
 }
 .subject-details-title {
     font-size: 1.5em;
@@ -490,7 +627,7 @@ html, body {
 
 .percentage-text .label {
     font-size: 0.9em;
-    color: #666;
+    color: var(--text);
     margin-top: 5px;
     font-weight: 500;
 }
@@ -591,8 +728,8 @@ html, body {
     top: 0;
     /* Ensure the header stays above scrolling content */
     z-index: 10; 
-    /* Use the card background color to hide content scrolling underneath */
-    background-color: var(--card); 
+    /* Use the page background color to hide content scrolling underneath */
+    background-color: var(--bg); 
     padding: 15px 0 15px 0; /* Add top/bottom padding for spacing */
     margin: 0;
 }
@@ -604,7 +741,7 @@ html, body {
     z-index: 10;
     margin-top: 0;
     margin-bottom: 20px;
-    background-color: var(--card); /* Match card background to blend */
+    background-color: var(--bg); /* Match page background to blend */
     border-color: var(--muted-border);
 }
 
@@ -620,4 +757,56 @@ html, body {
     font-weight: 700;
     color: var(--accent);
     margin-bottom: 15px;
+}
+
+/* Theme switcher button styles */
+.theme-switcher-container {
+    position: fixed; /* Or absolute, depending on desired scroll behavior */
+    top: 15px;
+    right: 15px;
+    z-index: 1000; /* Ensure it stays on top of other content */
+}
+
+#theme-toggle-btn {
+    appearance: none;
+    border: 1px solid var(--muted-border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--accent);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 150ms ease;
+    box-shadow: 0 4px 12px var(--muted-border);
+    display: flex; /* Center the icon */
+    align-items: center;
+    justify-content: center;
+}
+
+#theme-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(21, 101, 192, 0.1);
+}
+
+/* Notification Banner Style */
+.notification-banner {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    z-index: 2000;
+    background-color: #4CAF50; /* Green for success */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    animation: fadeInOut 3s ease-in-out forwards;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translate(-50%, -20px); }
+    10% { opacity: 1; transform: translate(-50%, 0); }
+    90% { opacity: 1; transform: translate(-50%, 0); }
+    100% { opacity: 0; transform: translate(-50%, -20px); }
 }

@@ -1,44 +1,47 @@
-// fileName: Previousattendance.jsx (CORRECTED SCRIPT)
 
 import React, { useState, useEffect } from "react";
-// Import the necessary data sources
 import { ATTENDANCE_DB, STUDENTS_DB } from "./database";
+import calendarIcon from './calender.gif';
+import classIcon from './class.gif';
 
-// Utility function to get today's date in YYYY-MM-DD format
 const getTodayDateString = () => {
     const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months start at 0
+    const yyyy = today.getFullYear(); 
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); 
     const dd = String(today.getDate()).padStart(2, '0');
-    // Database dates appear to be in YYYY-MM-DD format (ISO standard)
     return `${yyyy}-${mm}-${dd}`; 
 };
 
-// Function to get the list of students for a class/subject
-const getStudentList = () => {
-    // For simplicity, loads all students
-    return Object.entries(STUDENTS_DB).map(([usn, data]) => ({
+const getStudentList = (filterClass = 'All') => {
+    const allStudents = Object.entries(STUDENTS_DB).map(([usn, data]) => ({
         usn,
         name: data.name,
         class: data.class,
         status: 'N/A' 
     }));
+
+    if (filterClass === 'All') {
+        return allStudents;
+    }
+    return allStudents.filter(student => student.class === filterClass);
 };
 
 export default function PreviousAttendance({ onNavigate, subjectName }) {
     const [selectedDate, setSelectedDate] = useState('');
+    const availableClasses = [...new Set(Object.values(STUDENTS_DB).map(s => s.class))].sort();
+    const [selectedClass, setSelectedClass] = useState(availableClasses[0] || '');
     const [attendanceList, setAttendanceList] = useState([]);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [isDirty, setIsDirty] = useState(false);
     const [message, setMessage] = useState('');
 
-    // Set initial date to a sample past working day
     useEffect(() => {
         const today = new Date();
         let prevDay = new Date(today);
         let daysToSubtract = 0;
         while (daysToSubtract < 2) {
             prevDay.setDate(prevDay.getDate() - 1);
-            if (prevDay.getDay() !== 0 && prevDay.getDay() !== 6) { // Skip weekends
+            if (prevDay.getDay() !== 0 && prevDay.getDay() !== 6) { 
                 daysToSubtract++;
             }
         }
@@ -48,15 +51,13 @@ export default function PreviousAttendance({ onNavigate, subjectName }) {
         const dd = String(prevDay.getDate()).padStart(2, '0');
         
         setSelectedDate(`${yyyy}-${mm}-${dd}`);
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, []); 
 
-    // Load attendance when component mounts or date/subject changes
     useEffect(() => {
         loadAttendance();
-    }, [selectedDate, subjectName]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [selectedDate, subjectName, selectedClass]); 
 
 
-    // Function to load attendance data for the selected date
     const loadAttendance = () => {
         if (!selectedDate || !subjectName) {
             setMessage('Date or subject not available.');
@@ -67,33 +68,31 @@ export default function PreviousAttendance({ onNavigate, subjectName }) {
 
         const dateKey = selectedDate; 
 
-        // Check if attendance exists for the date and subject
         const subjectAttendance = ATTENDANCE_DB[dateKey]?.[subjectName] || {};
         
-        const initialList = getStudentList().map(student => {
+        const initialList = getStudentList(selectedClass).map(student => {
             const record = subjectAttendance[student.usn];
             return {
                 ...student,
-                // Status is 'Present', 'Absent', or 'N/A' if no record exists
                 status: record?.status || 'N/A' 
             };
         });
 
         setAttendanceList(initialList);
         setIsDataLoaded(true);
+        setIsDirty(false); // Reset dirty state on load
         setMessage(initialList.length === 0 ? 'No students found for this subject.' : '');
     };
 
-    // Handler for changing a student's status
     const handleStatusChange = (usn, newStatus) => {
         setAttendanceList(prevList => 
             prevList.map(student => 
                 student.usn === usn ? { ...student, status: newStatus } : student
             )
         );
+        setIsDirty(true); // Mark form as dirty
     };
 
-    // Handler for saving changes (simulates a database update)
     const handleSaveChanges = () => {
         const changes = attendanceList.filter(student => student.status !== 'N/A');
         
@@ -102,8 +101,6 @@ export default function PreviousAttendance({ onNavigate, subjectName }) {
             return;
         }
 
-        // --- SIMULATED DATABASE UPDATE ---
-        
         if (!ATTENDANCE_DB[selectedDate]) {
              ATTENDANCE_DB[selectedDate] = {};
         }
@@ -120,10 +117,10 @@ export default function PreviousAttendance({ onNavigate, subjectName }) {
         });
 
         setMessage(`Attendance for ${subjectName} on ${selectedDate} saved successfully!`);
-        setTimeout(() => setMessage(''), 3000); 
+        setIsDirty(false); // Reset dirty state after saving
+        setTimeout(() => setMessage(''), 3000); // Clear message after animation
     };
 
-    // Helper function to render a table block (to avoid repetition)
     const renderTable = (list, handleStatusChange) => (
         <table className="themed-table">
             <thead>
@@ -158,24 +155,35 @@ export default function PreviousAttendance({ onNavigate, subjectName }) {
     return (
         <div className="profile-container">
             <div className="profile-card">
-                <button className="back-link" onClick={() => onNavigate("teacher-dashboard")}>
-                    ← Back to Dashboard
+                <button className="back-link" onClick={() => onNavigate("teacher-dashboard")} title="Back to Dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                 </button>
                 <h2 className="subject-details-title">Review & Edit Attendance: {subjectName}</h2>
 
                 <div className="input-group" style={{ display: 'flex', gap: '15px', alignItems: 'center', marginBottom: '20px' }}>
-                    <label htmlFor="date-picker">Select Date:</label>
+                    <img src={classIcon} alt="Select Class" className="input-icon" />
+                    <select
+                        id="class-selector"
+                        value={selectedClass}
+                        onChange={(e) => setSelectedClass(e.target.value)}
+                        className="student-input"
+                        style={{ maxWidth: '180px', flexGrow: 0 }}
+                    >
+                        {availableClasses.map(c => <option key={c} value={c}>{`Class ${c}`}</option>)}
+                    </select>
+
                     <input
                         id="date-picker"
                         className="student-input" 
                         type="date"
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
-                        style={{ maxWidth: '180px', flexGrow: 0 }}
+                        style={{ maxWidth: '180px', flexGrow: 0, marginLeft: 'auto' }}
                     />
+                    <img src={calendarIcon} alt="Select Date" className="input-icon" />
                 </div>
 
-                {message && <div style={{ color: message.includes('saved') ? '#2e7d32' : 'var(--accent)', marginBottom: '15px', fontWeight: 'bold' }}>{message}</div>}
+                {message && <div className="notification-banner">{message}</div>}
 
                 {isDataLoaded && attendanceList.length > 0 && (
                     <>
@@ -187,12 +195,10 @@ export default function PreviousAttendance({ onNavigate, subjectName }) {
 
                             return (
                                 <div className="attendance-tables-wrapper">
-                                    {/* Table 1: First Half */}
                                     <div className="attendance-table-column">
                                         {renderTable(list1, handleStatusChange)}
                                     </div>
 
-                                    {/* Table 2: Second Half (only render if there's a second half) */}
                                     {list2.length > 0 && (
                                         <div className="attendance-table-column">
                                             {renderTable(list2, handleStatusChange)}
@@ -205,7 +211,15 @@ export default function PreviousAttendance({ onNavigate, subjectName }) {
                         <button 
                             className="subject-btn" 
                             onClick={handleSaveChanges}
-                            style={{ marginTop: '20px', padding: '10px 20px', background: '#4CAF50', color: 'white', border: 'none' }}
+                            disabled={!isDirty}
+                            style={{ 
+                                marginTop: '20px', 
+                                padding: '10px 20px', 
+                                background: '#4CAF50', 
+                                color: 'white', 
+                                border: 'none',
+                                opacity: !isDirty ? 0.6 : 1
+                            }}
                         >
                             Save Changes
                         </button>

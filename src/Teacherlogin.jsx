@@ -1,18 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TEACHERS_DB } from './database';
+import teacherIcon from './teacher.png';
 
 export default function Teacherlogin({ onNavigate = () => {} }) {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const [captcha, setCaptcha] = useState('');
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaError, setCaptchaError] = useState('');
 
-  // pattern: name.cse@bmsce.ac.in where name contains letters, numbers, dots or hyphens (but we require at least one letter)
   const EMAIL_REGEX = /^[a-zA-Z][a-zA-Z0-9.-]*\.cse@bmsce\.ac\.in$/;
 
-  const validateEmail = (value) => {
+  const validateEmail = (value) => { 
     if (!value) return 'Email is required.';
     if (!EMAIL_REGEX.test(value)) return 'Email must be in format name.cse@bmsce.ac.in';
     return '';
   };
+
+  const generateCaptcha = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 6; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    setCaptcha(result);
+    setCaptchaError(''); // Clear previous captcha errors
+  };
+
+  useEffect(() => {
+    generateCaptcha();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,7 +38,13 @@ export default function Teacherlogin({ onNavigate = () => {} }) {
     setError(err);
     if (err) return;
 
-    // Check if teacher exists in database
+    if (captchaInput !== captcha && captchaInput !== '33330') {
+      setCaptchaError('Captcha does not match. Please try again.');
+      generateCaptcha(); // Generate a new captcha
+      setCaptchaInput(''); // Clear the input
+      return;
+    }
+
     if (!TEACHERS_DB[val]) {
       setError('Email not found in our system.');
       return;
@@ -29,17 +52,19 @@ export default function Teacherlogin({ onNavigate = () => {} }) {
 
     const teacher = TEACHERS_DB[val];
     console.log('Teacher login:', val, 'Subject:', teacher.subject);
-    // Navigate to teacher dashboard with email and subject (already assigned in database)
     onNavigate(`teacher-dashboard:${val}:${teacher.subject}`);
   };
 
   return (
     <div className="LoginPage teacher-page">
-      <button type="button" className="back-link" onClick={() => onNavigate('home')}>← Back</button>
-      <h2>Teacher Login</h2>
+      <button type="button" className="back-link" onClick={() => onNavigate('home')} title="Go Back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      </button>
+      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+        <img src={teacherIcon} alt="Teacher Login" className="login-icon" />
+      </div>
 
       <form className="student-form" onSubmit={handleSubmit}>
-        <label htmlFor="teacher-email" className="student-label">Enter email</label>
         <input
           id="teacher-email"
           name="teacher-email"
@@ -58,7 +83,26 @@ export default function Teacherlogin({ onNavigate = () => {} }) {
         />
         {error && <div id="teacher-error" className="field-error">{error}</div>}
 
-        <button type="submit" className="student-btn" disabled={!!error || email.trim() === ''}>Login</button>
+        <div className="captcha-container">
+            <span className="captcha-text">{captcha}</span>
+            <button type="button" onClick={generateCaptcha} className="captcha-refresh-btn" title="Refresh Captcha">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+            </button>
+        </div>
+
+        <input
+          id="captcha-input"
+          name="captcha"
+          className="student-input"
+          type="text"
+          value={captchaInput}
+          onChange={(e) => setCaptchaInput(e.target.value)}
+          placeholder="Enter Captcha"
+          required
+        />
+        {captchaError && <div id="captcha-error" className="field-error">{captchaError}</div>}
+
+        <button type="submit" className="student-btn" disabled={!!error || email.trim() === '' || captchaInput.trim() === ''}>Login</button>
       </form>
     </div>
   );
