@@ -233,6 +233,15 @@ html, body {
     margin-bottom: 12px; /* space between back button and heading */
 }
 
+/* Sticky style for the logout/back button */
+.back-link.sticky-logout {
+    position: sticky;
+    top: 0;
+    z-index: 20; /* Higher than header to be on top */
+    background-color: var(--bg); /* Match background to hide content underneath */
+    padding-top: 15px; /* Add some padding when sticky */
+}
+
 .back-link:focus {
     outline: 2px solid rgba(21,101,192,0.18);
     border-radius: 6px;

@@ -11,7 +11,7 @@ export default function Studentprofile({ onNavigate, usn = null }) {
 
   return (
     <div className="profile-container">
-      <div className="profile-card">
+      <div className="profile-card" style={{ position: 'relative' }}>
         <button className="back-link" onClick={() => onNavigate("home")} title="Logout" >
           <LogoutIcon />
         </button>
