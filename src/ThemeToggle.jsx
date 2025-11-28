@@ -53,7 +53,7 @@ export const LogoutIcon = () => (
 );
 
 export default function ThemeToggle() {
-    const themes = ['black-white', 'white-black', 'red-pink', 'blue-grey', 'green-grey'];
+    const themes = ['black-white', 'white-black', 'blue-grey', 'green-grey'];
     const [currentTheme, setCurrentTheme] = useState(() => {
         return localStorage.getItem('theme') || themes[0];
     });
@@ -75,8 +75,6 @@ export default function ThemeToggle() {
                 return <SunIcon />;
             case 'white-black':
                 return <MoonIcon />;
-            case 'red-pink':
-                return <FireIcon />;
             case 'blue-grey':
                 return <WaterIcon />;
             case 'green-grey':

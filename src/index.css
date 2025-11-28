@@ -56,18 +56,7 @@ header{
 }
 
 
-/* Theme 3: red-pink */
-[data-theme='red-pink'] {
-    --bg: rgb(255, 220, 220); /* Light Pink */
-    --card: #ffffff;
-    --tile: #ffcdd2;
-    --tile-hover: #ef9a9a;
-    --accent: #e53935; /* A more fiery red */
-    --muted-border: rgba(198, 40, 40, 0.1);
-    --text: #b71c1c; /* Darkest Red */
-}
-
-/* Theme 4: blue-grey */
+/* Theme 3: blue-grey */
 [data-theme='blue-grey'] {
     --bg: #eceff1; /* Blue Grey 50 */
     --card: #ffffff;
@@ -78,7 +67,7 @@ header{
     --text: #0288D1; /* A slightly darker Sky Blue for readability */
 }
 
-/* Theme 5: green-grey */
+/* Theme 4: green-grey */
 [data-theme='green-grey'] {
     --bg: #e0f2f1; /* Teal 50 */
     --card: #ffffff;
@@ -171,12 +160,8 @@ html, body {
     background: linear-gradient(90deg, #4f4e4e, #333232);
 }
 
-[data-theme='red-pink'] .LoginPage h2 {
-    background: linear-gradient(90deg, #ffcdd2, #ef9a9a);
-}
-
 [data-theme='blue-grey'] .LoginPage h2 {
-    background: linear-gradient(90deg, #cfd8dc, #89d8ff);
+    background: linear-gradient(90deg, #cfd8dc, #b0bec5);
 }
 
 [data-theme='green-grey'] .LoginPage h2 {
@@ -432,12 +417,9 @@ html, body {
     background: linear-gradient(90deg, #4f4e4e, #333232);
 }
 
-[data-theme='red-pink'] .subject-item {
-    background: linear-gradient(90deg, #ffcdd2, #ef9a9a);
-}
-
 [data-theme='blue-grey'] .subject-item {
     background: linear-gradient(90deg, #cfd8dc, #89d8ff);
+
 }
 
 [data-theme='green-grey'] .subject-item {
