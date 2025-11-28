@@ -161,7 +161,7 @@ html, body {
 }
 
 [data-theme='blue-grey'] .LoginPage h2 {
-    background: linear-gradient(90deg, #cfd8dc, #b0bec5);
+    background: linear-gradient(90deg, #cfd8dc, #89d8ff);
 }
 
 [data-theme='green-grey'] .LoginPage h2 {
