@@ -20,7 +20,7 @@ header{
 
 /* Default Theme 1: black-white */
 :root {
-    --bg: #ffffff;
+    --bg: rgb(235, 235, 235);
     --card: #f9f9f9;
     --tile: #f0f0f0;
     --tile-hover: #e0e0e0;
@@ -31,7 +31,7 @@ header{
 
 /* Theme 2: white-black */
 [data-theme='white-black'] {
-    --bg: #000000;
+    --bg: rgb(20, 20, 20);
     --card: #1a1a1a;
     --tile: #2c2c2c;
     --tile-hover: #3d3d3d;
@@ -58,7 +58,7 @@ header{
 
 /* Theme 3: red-pink */
 [data-theme='red-pink'] {
-    --bg: #ffebee; /* Light Pink */
+    --bg: rgb(255, 220, 220); /* Light Pink */
     --card: #ffffff;
     --tile: #ffcdd2;
     --tile-hover: #ef9a9a;
@@ -76,6 +76,17 @@ header{
     --accent: #03A9F4; /* Sky Blue */
     --muted-border: rgba(3, 169, 244, 0.1);
     --text: #0288D1; /* A slightly darker Sky Blue for readability */
+}
+
+/* Theme 5: green-grey */
+[data-theme='green-grey'] {
+    --bg: #e0f2f1; /* Teal 50 */
+    --card: #ffffff;
+    --tile: #b2dfdb; /* Teal 100 */
+    --tile-hover: #80cbc4; /* Teal 200 */
+    --accent: #00796b; /* Dark Teal */
+    --muted-border: rgba(0, 121, 107, 0.1);
+    --text: #004d40; /* Very Dark Teal */
 }
 
 /* General label for input fields */
@@ -99,7 +110,7 @@ header{
 /* Page background */
 html, body {
     height: 100%;
-    background-color: var(--bg);
+    background-color:var(--bg);
     /* Subtle repeating plus pattern using an inline SVG */
     margin: 0;
     scrollbar-width: none;
@@ -142,7 +153,7 @@ html, body {
     margin: 0;
     padding: 18px 22px;
     text-align: center;
-    background: var(--tile);
+    background: linear-gradient(90deg, var(--tile), var(--tile-hover));
     border-radius: 8px;
     border: 1px solid rgba(21,101,192,0.12);
     cursor: pointer;
@@ -150,6 +161,26 @@ html, body {
     color: var(--accent);
     font-size: 22px;
     font-weight: 600;
+}
+
+:root .LoginPage h2 {
+    background: linear-gradient(90deg, #ded9d9, #a69a9a);
+}
+
+[data-theme='white-black'] .LoginPage h2 {
+    background: linear-gradient(90deg, #4f4e4e, #333232);
+}
+
+[data-theme='red-pink'] .LoginPage h2 {
+    background: linear-gradient(90deg, #ffcdd2, #ef9a9a);
+}
+
+[data-theme='blue-grey'] .LoginPage h2 {
+    background: linear-gradient(90deg, #cfd8dc, #89d8ff);
+}
+
+[data-theme='green-grey'] .LoginPage h2 {
+    background: linear-gradient(90deg, #c4e9e5, #7fe4da);
 }
 
 .LoginPage h2:hover {
@@ -390,7 +421,27 @@ html, body {
     align-items: center;
     padding: 14px 16px;
     border-radius: 8px;
-    background: var(--tile);
+    background: linear-gradient(90deg, var(--tile), var(--tile-hover));
+}
+
+:root .subject-item {
+    background: linear-gradient(90deg, #ded9d9, #a69a9a);
+}
+
+[data-theme='white-black'] .subject-item {
+    background: linear-gradient(90deg, #4f4e4e, #333232);
+}
+
+[data-theme='red-pink'] .subject-item {
+    background: linear-gradient(90deg, #ffcdd2, #ef9a9a);
+}
+
+[data-theme='blue-grey'] .subject-item {
+    background: linear-gradient(90deg, #cfd8dc, #89d8ff);
+}
+
+[data-theme='green-grey'] .subject-item {
+    background: linear-gradient(90deg, #c4e9e5, #7fe4da);
 }
 
 .subject-item.active {
@@ -409,7 +460,7 @@ html, body {
     padding: 10px 14px;
     border-radius: 8px;
     border: 1px solid rgba(21,101,192,0.12);
-    background: #ffffff;
+    background: linear-gradient(90deg,white,rgb(200,200,200));
     color: var(--accent);
     font-weight: 700;
     font-size: 14px;
