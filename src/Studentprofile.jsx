@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { STUDENTS_DB, SUBJECTS } from "./database";
 import Subjectdetails from "./Subjectdetails"; 
-import studentAvatar from './assets/student.gif';
+import boyAvatar from './assets/boy.gif';
+import girlAvatar from './assets/girl.gif';
 import { LogoutIcon } from './ThemeToggle.jsx';
 
 export default function Studentprofile({ onNavigate, usn = null }) {
-  const studentData = STUDENTS_DB[usn] || { name: "Unknown", class: "Unknown" };
+  const studentData = STUDENTS_DB[usn] || { name: "Unknown", class: "Unknown", gender: "M" };
+  const studentAvatar = studentData.gender === 'F' ? girlAvatar : boyAvatar;
   
-  const [selectedSubject, setSelectedSubject] = useState(null); 
+  const [selectedSubject, setSelectedSubject] = useState(null);
 
   return (
     <div className="profile-container">

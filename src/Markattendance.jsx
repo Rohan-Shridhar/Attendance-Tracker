@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ATTENDANCE_DB, STUDENTS_DB } from "./database";
+import { ATTENDANCE_DB, STUDENTS_DB, TEACHERS_DB } from "./database";
 import classIcon from './assets/class.gif';
 
 const getTodayDateString = () => {
@@ -23,11 +23,20 @@ const getStudentList = (filterClass = 'All') => {
     return allStudents.filter(student => student.class === filterClass);
 };
 
-export default function MarkAttendance({ onNavigate, subjectName }) {
+export default function MarkAttendance({ onNavigate, subjectName, teacherEmail }) {
     const [attendanceList, setAttendanceList] = useState([]);
     const [message, setMessage] = useState('');
     const [isDirty, setIsDirty] = useState(false);
-    const availableClasses = [...new Set(Object.values(STUDENTS_DB).map(s => s.class))].sort();
+    
+    // Get teacher's assigned classes
+    const teacherData = TEACHERS_DB[teacherEmail] || { classes: [] };
+    const teacherClasses = teacherData.classes || [];
+    
+    // Filter available classes to only show teacher's assigned classes
+    const availableClasses = teacherClasses.length > 0 
+        ? teacherClasses.sort() 
+        : [...new Set(Object.values(STUDENTS_DB).map(s => s.class))].sort();
+    
     const [selectedClass, setSelectedClass] = useState(availableClasses[0] || '');
     const todayDate = getTodayDateString();
 

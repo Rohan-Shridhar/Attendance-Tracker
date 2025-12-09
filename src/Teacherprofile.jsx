@@ -4,12 +4,13 @@ import teacherAvatar from './assets/teacher.gif';
 import { LogoutIcon } from './ThemeToggle.jsx';
 
 export default function Teacherprofile({ onNavigate = () => {}, teacherEmail = null }) {
-  const teacherData = TEACHERS_DB[teacherEmail] || { name: 'Unknown', subject: 'Unknown' };
+  const teacherData = TEACHERS_DB[teacherEmail] || { name: 'Unknown', subject: 'Unknown', classes: [] };
 
   const teacher = {
     name: teacherData.name,
     email: teacherEmail, 
     subject: teacherData.subject,
+    classes: teacherData.classes,
   };
 
   return (
@@ -28,6 +29,7 @@ export default function Teacherprofile({ onNavigate = () => {}, teacherEmail = n
             <div className="profile-name">{teacher.name}</div>
             <div className="profile-meta">Email: {teacher.email}</div>
             <div className="profile-meta">Subject: {teacher.subject}</div>
+            <div className="profile-meta">Classes: {teacher.classes.join(', ')}</div>
           </div>
         </div>
         
