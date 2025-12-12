@@ -8,7 +8,7 @@ body{
 header{
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; 
     color: var(--accent);
     font-family: cursive;
     font-weight: bold;
@@ -273,6 +273,47 @@ html, body {
 .student-input[aria-invalid="true"] {
     border-color: #f87171; /* red-400 */
     box-shadow: 0 6px 18px rgba(248, 113, 113, 0.06);
+}
+
+/* Password input wrapper for toggle button */
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper .student-input {
+    padding-right: 40px; /* Make space for the eye icon */
+    width: 100%;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    opacity: 0.6;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: opacity 120ms ease, background-color 120ms ease;
+}
+
+.password-toggle-btn:hover {
+    opacity: 1;
+    background-color: var(--tile);
+}
+
+.password-toggle-btn:focus {
+    outline: 2px solid rgba(21,101,192,0.18);
+    opacity: 1;
 }
 
 /* Captcha Styles */
