@@ -1,1 +1,1 @@
-![Structure](Structure.png)
+![Structure](Diagram.drawio.png)

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { ATTENDANCE_DB, STUDENTS_DB } from "./database";
+import { ATTENDANCE_DB, STUDENTS_DB, TEACHERS_DB } from "./database";
 import calendarIcon from './assets/calender.gif';
 import classIcon from './assets/class.gif';
 
@@ -26,9 +26,18 @@ const getStudentList = (filterClass = 'All') => {
     return allStudents.filter(student => student.class === filterClass);
 };
 
-export default function PreviousAttendance({ onNavigate, subjectName }) {
+export default function PreviousAttendance({ onNavigate, subjectName, teacherEmail }) {
     const [selectedDate, setSelectedDate] = useState('');
-    const availableClasses = [...new Set(Object.values(STUDENTS_DB).map(s => s.class))].sort();
+    
+    // Get teacher's assigned classes
+    const teacherData = TEACHERS_DB[teacherEmail] || { classes: [] };
+    const teacherClasses = teacherData.classes || [];
+    
+    // Filter available classes to only show teacher's assigned classes
+    const availableClasses = teacherClasses.length > 0 
+        ? teacherClasses.sort() 
+        : [...new Set(Object.values(STUDENTS_DB).map(s => s.class))].sort();
+    
     const [selectedClass, setSelectedClass] = useState(availableClasses[0] || '');
     const [attendanceList, setAttendanceList] = useState([]);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -178,6 +187,7 @@ export default function PreviousAttendance({ onNavigate, subjectName }) {
                         type="date"
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
+                        max={new Date().toISOString().split('T')[0]}
                         style={{ maxWidth: '180px', flexGrow: 0, marginLeft: 'auto' }}
                     />
                     <img src={calendarIcon} alt="Select Date" className="input-icon" />

@@ -3,16 +3,21 @@ import Header from './Header.jsx';
 import LoginPage from './LoginPage.jsx';
 import Studentlogin from './Studentlogin.jsx';
 import Teacherlogin from './Teacherlogin.jsx';
+import Hodlogin from './Hodlogin.jsx';
 import Studentprofile from './Studentprofile.jsx';
-import Teacherprofile from './Teacherprofile.jsx'; 
+import Teacherprofile from './Teacherprofile.jsx';
+import Hodprofile from './Hodprofile.jsx';
+import ManageFaculty from './Managefaculty.jsx';
+import AttendanceDetails from './Attendancedetails.jsx';
 import PreviousAttendance from './Previousattendance.jsx';
 import MarkAttendance from './Markattendance.jsx';
 
 function App() {
     const [route, setRoute] = useState('home');
     const [studentUsn, setStudentUsn] = useState(null);
-    const [teacherEmail, setTeacherEmail] = useState(null); 
-    const [teacherSubject, setTeacherSubject] = useState(null); 
+    const [teacherEmail, setTeacherEmail] = useState(null);
+    const [teacherSubject, setTeacherSubject] = useState(null);
+    const [hodEmail, setHodEmail] = useState(null);
 
     const navigate = (to) => {
         if (to.startsWith('student-profile:')) {
@@ -37,6 +42,11 @@ function App() {
             setTeacherSubject(subject);
             setRoute('previous-attendance');
         }
+        else if (to.startsWith('hod-dashboard:')) {
+            const email = to.split(':')[1];
+            setHodEmail(email);
+            setRoute('hod-dashboard');
+        }
         else {
             setRoute(to);
         }
@@ -48,10 +58,14 @@ function App() {
             {route === 'home' && <LoginPage onNavigate={navigate} />}
             {route === 'student' && <Studentlogin onNavigate={navigate} />}
             {route === 'teacher' && <Teacherlogin onNavigate={navigate} />}
+            {route === 'hod' && <Hodlogin onNavigate={navigate} />}
             {route === 'student-profile' && <Studentprofile onNavigate={navigate} usn={studentUsn} />}
             {route === 'teacher-dashboard' && <Teacherprofile onNavigate={navigate} teacherEmail={teacherEmail} />}
-            {route === 'mark-attendance' && <MarkAttendance onNavigate={navigate} subjectName={teacherSubject} />}
-            {route === 'previous-attendance' && <PreviousAttendance onNavigate={navigate}  subjectName={teacherSubject} />}
+            {route === 'hod-dashboard' && <Hodprofile onNavigate={navigate} hodEmail={hodEmail} />}
+            {route === 'manage-faculty' && <ManageFaculty onNavigate={navigate} view="main" />}
+            {route === 'attendance-details' && <AttendanceDetails onNavigate={navigate} />}
+            {route === 'mark-attendance' && <MarkAttendance onNavigate={navigate} subjectName={teacherSubject} teacherEmail={teacherEmail} />}
+            {route === 'previous-attendance' && <PreviousAttendance onNavigate={navigate} subjectName={teacherSubject} teacherEmail={teacherEmail} />}
         </>
     );
 }
