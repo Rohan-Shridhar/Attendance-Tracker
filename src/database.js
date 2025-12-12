@@ -130,7 +130,7 @@ export const TEACHERS_DB = {
 };
 
 export const Hod_DB = {
-  'hod.cse@bmsce.ac.in': { name: 'Dr. Ramesh Kumar', dept: 'Computer Science and Engineering' },
+  'hod.cse@bmsce.ac.in': { name: 'Dr. Surekha Naik', dept: 'Computer Science and Engineering' },
 };
 
 function getPast60WorkingDays() {
