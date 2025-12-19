@@ -1,65 +1,73 @@
 import React from "react";
-import { ATTENDANCE_DB } from "./database";
 
-export default function Subjectdetails({ usn, subjectName }) {
-  const attendanceData = [];
- 
-  for (const date in ATTENDANCE_DB) {
-    const subjects = ATTENDANCE_DB[date];
-    if (subjects[subjectName] && subjects[subjectName][usn]) {
-      attendanceData.push({
+export default function Subjectdetails({ usn, subjectName, attendance }) {
+  if (!attendance) {
+    return <p>Attendance data not available.</p>;
+  }
+
+  const records = [];
+
+  // 🔁 attendance comes from backend now
+  for (const date in attendance) {
+    const dayData = attendance[date];
+    if (dayData[subjectName] && dayData[subjectName][usn]) {
+      records.push({
         date,
-        status: subjects[subjectName][usn].status, 
+        status: dayData[subjectName][usn].status,
       });
     }
   }
 
-  const presentCount = attendanceData.filter(r => r.status === 'Present').length;
-  const absentCount = attendanceData.filter(r => r.status === 'Absent').length;
-  const totalClasses = attendanceData.length;
-  const presentPercentage = totalClasses > 0 ? ((presentCount / totalClasses) * 100).toFixed(1) : 0;
+  const total = records.length;
+  const present = records.filter(r => r.status === "Present").length;
+  const absent = total - present;
+  const percentage = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
 
   return (
     <>
       <h3 className="subject-details-title">{subjectName} Attendance</h3>
 
-      {totalClasses > 0 && (
+      {total > 0 && (
         <div className="attendance-summary-card">
-          <h4>Overall Attendance Summary</h4>
+          <h4>Overall Attendance</h4>
+
           <div className="summary-content">
             <div className="percentage-display">
               <div className="percentage-text">
-                <span className="present">{presentPercentage}%</span>
+                <span className="present">{percentage}%</span>
                 <span className="label">Attendance</span>
               </div>
-              
-              <div 
-                className="pie-chart-placeholder" 
-                style={{ 
-                  background: `conic-gradient(#2e7d32 0% ${presentPercentage}%, #c62828 ${presentPercentage}% 100%)`
+
+              <div
+                className="pie-chart-placeholder"
+                style={{
+                  background: `conic-gradient(
+                    #2e7d32 0% ${percentage}%,
+                    #c62828 ${percentage}% 100%
+                  )`,
                 }}
               />
             </div>
 
             <div className="summary-stats">
               <div className="stat-item">
-                <span className="stat-value">{presentCount}</span>
+                <span className="stat-value">{present}</span>
                 <span className="stat-label present">Present</span>
               </div>
               <div className="stat-item">
-                <span className="stat-value">{absentCount}</span>
+                <span className="stat-value">{absent}</span>
                 <span className="stat-label absent">Absent</span>
               </div>
               <div className="stat-item total">
-                <span className="stat-value">{totalClasses}</span>
-                <span className="stat-label">Total Classes</span>
+                <span className="stat-value">{total}</span>
+                <span className="stat-label">Total</span>
               </div>
             </div>
           </div>
         </div>
       )}
-      
-      {attendanceData.length > 0 ? (
+
+      {records.length > 0 ? (
         <table className="themed-table">
           <thead>
             <tr>
@@ -68,18 +76,18 @@ export default function Subjectdetails({ usn, subjectName }) {
             </tr>
           </thead>
           <tbody>
-            {attendanceData.map((record, index) => (
-              <tr key={index}>
-                <td>{record.date}</td>
-                <td className={record.status === 'Absent' ? 'status-absent' : 'status-present'}>
-                  {record.status}
+            {records.map((r, i) => (
+              <tr key={i}>
+                <td>{r.date}</td>
+                <td className={r.status === "Absent" ? "status-absent" : "status-present"}>
+                  {r.status}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       ) : (
-        <p>No attendance records available for this subject.</p>
+        <p>No attendance records available.</p>
       )}
     </>
   );

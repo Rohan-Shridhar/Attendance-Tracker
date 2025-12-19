@@ -478,7 +478,16 @@ html, body {
 }
 
 
-
+.save-btn{
+    margin-top: 20px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background-color: #4CAF50;
+    color:white;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+}
 .subject-btn {
     padding: 10px 14px;
     border-radius: 8px;
