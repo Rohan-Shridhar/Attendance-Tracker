@@ -41,10 +41,10 @@ function App() {
 ====================== */
 useEffect(() => {
   Promise.all([
-    fetch("/api/students").then(r => r.json()),
-    fetch("/api/teachers").then(r => r.json()),
-    fetch("/api/attendance").then(r => r.json()),
-    fetch("/api/subjects").then(r => r.json()), 
+    fetch("http://localhost:5000/api/students").then(r => r.json()),
+    fetch("http://localhost:5000/api/teachers").then(r => r.json()),
+    fetch("http://localhost:5000/api/attendance").then(r => r.json()),
+    fetch("http://localhost:5000/api/subjects").then(r => r.json()), 
   ])
     .then(([students, teachers, attendance, subjects]) => {
       setDbData({

@@ -69,7 +69,7 @@ export default function ManageFaculty({ onNavigate, teachers: teachersFromApp, s
 
     try {
       const requests = teachers.map(t => 
-        fetch(`/api/teachers/${t.email}/classes`, {
+        fetch(`http://localhost:5000/api/teachers/${t.email}/classes`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ classes: t.assignedClasses.filter(c => c !== "") }),

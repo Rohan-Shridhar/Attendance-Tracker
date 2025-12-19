@@ -91,7 +91,7 @@ export default function AttendanceDetails({
               className="student-input"
               value={selectedClass}
               onChange={e => setSelectedClass(e.target.value)}
-              style={{ width: "100%" }}
+              style={{ width: "30%" }}
             >
               <option value="" disabled>Select Class</option>
               {classList.map(c => (
@@ -106,7 +106,7 @@ export default function AttendanceDetails({
               className="student-input"
               value={selectedSubject}
               onChange={e => setSelectedSubject(e.target.value)}
-              style={{ width: "100%" }}
+              style={{ width: "30%" , marginLeft: "200px" }}
             >
               <option value="" disabled>Select Subject</option>
               {subjectNames.map(s => (

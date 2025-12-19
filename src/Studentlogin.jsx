@@ -65,7 +65,7 @@ export default function Studentlogin({ onNavigate = () => {} }) {
     try {
       setLoading(true);
 
-      const res = await fetch(`/api/students/${trimmedUsn}`);
+      const res = await fetch(`http://localhost:5000/api/students/${trimmedUsn}`);
 
       if (!res.ok) {
         setError('USN not found in system');
