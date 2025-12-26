@@ -1,4 +1,4 @@
-// DB.js
+// server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -123,13 +123,10 @@ app.post("/api/teachers/login", async (req, res) => {
 
   if (!teacher) return res.status(404).json({ success: false });
 
-  // Transform "3A,3B,3C,3D" into ["3A", "3B", "3C", "3D"]
   let formattedClasses = [];
   if (Array.isArray(teacher.Classes)) {
-    // If it's an array containing a comma-separated string: ["3A,3B,3C"]
     formattedClasses = teacher.Classes.flatMap(cls => cls.split(",").map(s => s.trim()));
   } else if (typeof teacher.Classes === "string") {
-    // If it's just a string: "3A,3B,3C"
     formattedClasses = teacher.Classes.split(",").map(s => s.trim());
   }
 
@@ -143,7 +140,6 @@ app.post("/api/teachers/login", async (req, res) => {
     },
   });
 });
-/* ---- TEACHERS (Manage Faculty) ---- */
 
 app.get("/api/teachers", async (_, res) => {
   const teachers = await Teacher.find({});
