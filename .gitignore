@@ -20,4 +20,4 @@ lerna-debug.log*
 # Editor directories and files
 .vscode
 .idea
-.env
+uri.env
