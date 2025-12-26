@@ -2,7 +2,7 @@
 /node_modules
 /.pnp
 .pnp.js
-
+/src/uri.env
 # Build output and cache
 /dist
 /build
@@ -20,4 +20,3 @@ lerna-debug.log*
 # Editor directories and files
 .vscode
 .idea
-uri.env
