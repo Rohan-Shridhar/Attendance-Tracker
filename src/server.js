@@ -23,7 +23,7 @@ const teacherSchema = new mongoose.Schema({
   Name: String,
   Email: String,
   Subject: String,
-  Classes: [String], // ✅ ARRAY
+  Classes: [String], 
 });
 
 const subjectSchema = new mongoose.Schema({

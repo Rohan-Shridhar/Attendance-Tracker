@@ -17,28 +17,18 @@ import MarkAttendance from './Markattendance.jsx';
 import PreviousAttendance from './Previousattendance.jsx';
 
 function App() {
-  /* ======================
-     ROUTING STATE
-  ====================== */
+
   const [route, setRoute] = useState('home');
 
-  /* ======================
-     AUTH / CONTEXT STATE
-  ====================== */
   const [studentUsn, setStudentUsn] = useState(null);
   const [teacherEmail, setTeacherEmail] = useState(null);
   const [teacherSubject, setTeacherSubject] = useState(null);
   const [hodEmail, setHodEmail] = useState(null);
 
-  /* ======================
-     DATABASE STATE
-  ====================== */
   const [dbData, setDbData] = useState(null);
   const [attendance, setAttendance] = useState(null);
 
-/* ======================
-   FETCH MASTER DATA
-====================== */
+
 useEffect(() => {
   Promise.all([
     fetch("http://localhost:5000/api/students").then(r => r.json()),
@@ -52,7 +42,7 @@ useEffect(() => {
         TEACHERS_DB: Object.fromEntries(
           teachers.map(t => [t.email, t])
         ),
-        SUBJECTS_LIST: subjects, // ✅ Store subjects array in state
+        SUBJECTS_LIST: subjects, 
       });
       setAttendance(attendance);
     })
@@ -64,9 +54,7 @@ useEffect(() => {
 
 
 
-  /* ======================
-     NAVIGATION HANDLER
-  ====================== */
+
   const navigate = (to) => {
     if (to.startsWith('student-profile:')) {
       setStudentUsn(to.split(':')[1]);
@@ -100,16 +88,12 @@ useEffect(() => {
     }
   };
 
-  /* ======================
-     LOADING STATE
-  ====================== */
+
   if (!dbData || !attendance) {
     return <div className="loading">Connecting to database...</div>;
   }
 
-  /* ======================
-     RENDER
-  ====================== */
+
   return (
     <>
       <Header />

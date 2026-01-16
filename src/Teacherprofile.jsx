@@ -7,7 +7,6 @@ export default function Teacherprofile({
   teacherEmail = null,
   teachers = {}
 }) {
-  // ✅ Teacher data from BACKEND (via App.jsx)
   const teacherData = teachers[teacherEmail];
 
   if (!teacherData) {

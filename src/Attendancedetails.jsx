@@ -145,9 +145,9 @@ export default function AttendanceDetails({
                       style={{
                         fontWeight: "bold",
                         color:
-                          s.percent >= 75
+                          s.percent >= 85
                             ? "#2e7d32"
-                            : s.percent >= 60
+                            : s.percent >= 75
                             ? "#f57c00"
                             : "#c62828",
                       }}
