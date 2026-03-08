@@ -3,14 +3,14 @@ import subjectIcon from "./assets/subject.gif";
 
 export default function ManageFaculty({ onNavigate, teachers: teachersFromApp, students, subjects }) {
   const [teachers, setTeachers] = useState([]);
-  const [notification, setNotification] = useState({ message: "", type: "" }); 
+  const [notification, setNotification] = useState({ message: "", type: "" });
   const [dirty, setDirty] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState("All");
 
   const ALL_POSSIBLE_CLASSES = [...new Set(Object.values(students || {}).map(s => s.class))].sort();
 
   useEffect(() => {
-    const formatted = Object.values(teachersFromApp || {}).map(t => {
+    const formatted = (teachersFromApp || []).map(t => {
       const currentClasses = Array.isArray(t.classes) ? t.classes : [];
       const slots = [...currentClasses, "", "", "", ""].slice(0, 4);
       return { ...t, assignedClasses: slots };
@@ -33,13 +33,13 @@ export default function ManageFaculty({ onNavigate, teachers: teachersFromApp, s
   const handleClassChange = (email, index, newValue) => {
     // 1. Validation for Duplicate Classes
     if (newValue !== "") {
-      const isDuplicate = filteredTeachers.some(t => 
+      const isDuplicate = filteredTeachers.some(t =>
         t.assignedClasses.some(cls => cls === newValue)
       );
 
       if (isDuplicate) {
         showNotif("No two teachers will have same class", "error");
-        return; 
+        return;
       }
     }
 
@@ -58,7 +58,7 @@ export default function ManageFaculty({ onNavigate, teachers: teachersFromApp, s
 
   const saveChanges = async () => {
     // 2. Validation for None/Empty selections
-    const hasEmptySlot = filteredTeachers.some(t => 
+    const hasEmptySlot = filteredTeachers.some(t =>
       t.assignedClasses.some(cls => cls === "")
     );
 
@@ -68,7 +68,7 @@ export default function ManageFaculty({ onNavigate, teachers: teachersFromApp, s
     }
 
     try {
-      const requests = teachers.map(t => 
+      const requests = teachers.map(t =>
         fetch(`http://localhost:5000/api/teachers/${t.email}/classes`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -89,11 +89,11 @@ export default function ManageFaculty({ onNavigate, teachers: teachersFromApp, s
       <div className="profile-card">
         <button className="back-link" onClick={() => onNavigate("hod-dashboard")}>← Back</button>
         <h2 className="subject-details-title">Manage Faculty Classes</h2>
-        
+
         <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: 1 }}>
           <img src={subjectIcon} className="input-icon" alt="subject" />
-          <select 
-            value={selectedSubject} 
+          <select
+            value={selectedSubject}
             onChange={e => setSelectedSubject(e.target.value)}
             className="student-input"
             style={{ marginBottom: "20px" }}
@@ -104,10 +104,10 @@ export default function ManageFaculty({ onNavigate, teachers: teachersFromApp, s
 
         {/* Dynamic Notification Banner */}
         {notification.message && (
-          <div 
-            className="notification-banner" 
-            style={{ 
-              backgroundColor: notification.type === "error" ? "#d32f2f" : "#2e7d32", 
+          <div
+            className="notification-banner"
+            style={{
+              backgroundColor: notification.type === "error" ? "#d32f2f" : "#2e7d32",
               color: "white",
               padding: "12px",
               borderRadius: "8px",
@@ -156,10 +156,10 @@ export default function ManageFaculty({ onNavigate, teachers: teachersFromApp, s
           </tbody>
         </table>
 
-        <button 
-          className="save-btn" 
-          disabled={!dirty} 
-          onClick={saveChanges} 
+        <button
+          className="save-btn"
+          disabled={!dirty}
+          onClick={saveChanges}
           style={{ marginTop: 20 }}
         >
           Update Database Entries
