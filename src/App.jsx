@@ -29,27 +29,25 @@ function App() {
   const [attendance, setAttendance] = useState(null);
 
 
-useEffect(() => {
-  Promise.all([
-    fetch("http://localhost:5000/api/students").then(r => r.json()),
-    fetch("http://localhost:5000/api/teachers").then(r => r.json()),
-    fetch("http://localhost:5000/api/attendance").then(r => r.json()),
-    fetch("http://localhost:5000/api/subjects").then(r => r.json()), 
-  ])
-    .then(([students, teachers, attendance, subjects]) => {
-      setDbData({
-        STUDENTS_DB: students,
-        TEACHERS_DB: Object.fromEntries(
-          teachers.map(t => [t.email, t])
-        ),
-        SUBJECTS_LIST: subjects, 
+  useEffect(() => {
+    Promise.all([
+      fetch("http://localhost:5000/api/students").then(r => r.json()),
+      fetch("http://localhost:5000/api/teachers").then(r => r.json()),
+      fetch("http://localhost:5000/api/attendance").then(r => r.json()),
+      fetch("http://localhost:5000/api/subjects").then(r => r.json()),
+    ])
+      .then(([students, teachers, attendance, subjects]) => {
+        setDbData({
+          STUDENTS_DB: students,
+          TEACHERS_DB: teachers,
+          SUBJECTS_LIST: subjects,
+        });
+        setAttendance(attendance);
+      })
+      .catch(err => {
+        console.error("❌ Failed to load DB data:", err);
       });
-      setAttendance(attendance);
-    })
-    .catch(err => {
-      console.error("❌ Failed to load DB data:", err);
-    });
-}, []);
+  }, []);
 
 
 
@@ -128,18 +126,21 @@ useEffect(() => {
         <Teacherprofile
           onNavigate={navigate}
           teacherEmail={teacherEmail}
+          teacherSubject={teacherSubject}
           teachers={dbData.TEACHERS_DB}
         />
       )}
 
       {route === 'mark-attendance' && (
-      <MarkAttendance
-        onNavigate={navigate}
-        subjectName={teacherSubject}
-        teacherEmail={teacherEmail}
-        teacherClasses={dbData.TEACHERS_DB[teacherEmail]?.classes || []}
-        students={dbData.STUDENTS_DB}
-        attendance={attendance}
+        <MarkAttendance
+          onNavigate={navigate}
+          subjectName={teacherSubject}
+          teacherEmail={teacherEmail}
+          teacherClasses={
+            dbData.TEACHERS_DB.find(t => t.email === teacherEmail && t.subject === teacherSubject)?.classes || []
+          }
+          students={dbData.STUDENTS_DB}
+          attendance={attendance}
         />
       )}
 
@@ -150,7 +151,7 @@ useEffect(() => {
           teacherEmail={teacherEmail}
           students={dbData.STUDENTS_DB}
           attendance={attendance}
-          teachers={dbData.TEACHERS_DB} 
+          teachers={dbData.TEACHERS_DB}
         />
       )}
 
@@ -167,8 +168,8 @@ useEffect(() => {
         <ManageFaculty
           onNavigate={navigate}
           teachers={dbData.TEACHERS_DB}
-          students={dbData.STUDENTS_DB}   
-          subjects={dbData.SUBJECTS_LIST}  
+          students={dbData.STUDENTS_DB}
+          subjects={dbData.SUBJECTS_LIST}
         />
       )}
 

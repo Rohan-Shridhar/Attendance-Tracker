@@ -3,11 +3,12 @@ import teacherAvatar from './assets/teacher.gif';
 import { LogoutIcon } from './ThemeToggle.jsx';
 
 export default function Teacherprofile({
-  onNavigate = () => {},
+  onNavigate = () => { },
   teacherEmail = null,
-  teachers = {}
+  teacherSubject = null,
+  teachers = []
 }) {
-  const teacherData = teachers[teacherEmail];
+  const teacherData = (teachers || []).find(t => t.email === teacherEmail && t.subject === teacherSubject);
 
   if (!teacherData) {
     return (
@@ -27,7 +28,7 @@ export default function Teacherprofile({
   return (
     <div className="profile-container">
       <div className="profile-card">
-        
+
         {/* Logout */}
         <button
           className="back-link"
