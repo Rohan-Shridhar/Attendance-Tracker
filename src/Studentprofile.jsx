@@ -1,57 +1,84 @@
 import React, { useState } from "react";
-import { STUDENTS_DB, SUBJECTS } from "./database";
-import Subjectdetails from "./Subjectdetails"; 
-import boyAvatar from './assets/boy.gif';
-import girlAvatar from './assets/girl.gif';
-import { LogoutIcon } from './ThemeToggle.jsx';
+import Subjectdetails from "./Subjectdetails";
+import boyAvatar from "./assets/boy.gif";
+import girlAvatar from "./assets/girl.gif";
+import { LogoutIcon } from "./ThemeToggle.jsx";
 
-export default function Studentprofile({ onNavigate, usn = null }) {
-  const studentData = STUDENTS_DB[usn] || { name: "Unknown", class: "Unknown", gender: "M" };
-  const studentAvatar = studentData.gender === 'F' ? girlAvatar : boyAvatar;
-  
+export default function Studentprofile({
+  onNavigate,
+  usn,
+  students,
+  attendance,
+}) {
+  const student = students?.[usn];
+
+  if (!student) {
+    return (
+      <div className="profile-container">
+        <p>Student data not found.</p>
+      </div>
+    );
+  }
+
+  const avatar = student.gender === "F" ? girlAvatar : boyAvatar;
   const [selectedSubject, setSelectedSubject] = useState(null);
+
+  // 🔒 Static subjects for now (as per your requirement)
+  const SUBJECTS = ["DST", "DBMS", "JAVA", "COA", "LD", "USP", "FWD"];
 
   return (
     <div className="profile-container">
-      <div className="profile-card" style={{ position: 'relative' }}>
-        <button className="back-link" onClick={() => onNavigate("home")} title="Logout" >
+      <div className="profile-card" style={{ position: "relative" }}>
+        
+        {/* Logout */}
+        <button
+          className="back-link"
+          onClick={() => onNavigate("home")}
+          title="Logout"
+        >
           <LogoutIcon />
         </button>
-        
-        <div className={`profile-header ${selectedSubject ? 'fixed-header' : ''}`}>
+
+        {/* Header */}
+        <div className={`profile-header ${selectedSubject ? "fixed-header" : ""}`}>
           <div className="avatar">
-            <img src={studentAvatar} alt="Student Avatar" />
+            <img src={avatar} alt="Student Avatar" />
           </div>
           <div className="profile-info">
-            <div className="profile-name">{studentData.name}</div>
+            <div className="profile-name">{student.name}</div>
             <div className="profile-meta">USN: {usn}</div>
-            <div className="profile-meta">Class: {studentData.class}</div>
+            <div className="profile-meta">Class: {student.class}</div>
           </div>
         </div>
-        <hr className={`profile-divider ${selectedSubject ? 'fixed-divider' : ''}`} />
 
+        <hr className={`profile-divider ${selectedSubject ? "fixed-divider" : ""}`} />
+
+        {/* Body */}
         {selectedSubject ? (
           <div className="subject-details-wrapper">
-            <button 
-              className="back-link" 
+            <button
+              className="back-link"
               onClick={() => setSelectedSubject(null)}
-              style={{ marginBottom: '12px' }}
+              style={{ marginBottom: "12px" }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+              ← Back
             </button>
-            <div className="subject-details">
-              <Subjectdetails usn={usn} subjectName={selectedSubject} />
-            </div>
+
+            <Subjectdetails
+              usn={usn}
+              subjectName={selectedSubject}
+              attendance={attendance}
+            />
           </div>
         ) : (
           <div className="subjects-list">
-            {SUBJECTS.map((subj) => (
-              <div key={subj.id} className="subject-item">
-                <div className="subject-title">{subj.name}</div>
+            {SUBJECTS.map(subject => (
+              <div key={subject} className="subject-item">
+                <div className="subject-title">{subject}</div>
                 <div className="subject-controls">
-                  <button 
-                    className="subject-btn" 
-                    onClick={() => setSelectedSubject(subj.name)}
+                  <button
+                    className="subject-btn"
+                    onClick={() => setSelectedSubject(subject)}
                   >
                     Details
                   </button>

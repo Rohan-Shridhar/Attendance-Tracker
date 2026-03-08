@@ -1,193 +1,137 @@
 import React, { useState, useEffect } from "react";
-import { ATTENDANCE_DB, STUDENTS_DB, TEACHERS_DB } from "./database";
-import classIcon from './assets/class.gif';
+import classIcon from "./assets/class.gif";
 
 const getTodayDateString = () => {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const dd = String(today.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
+  const d = new Date();
+  return d.toISOString().split("T")[0];
 };
 
-const getStudentList = (filterClass = 'All') => {
-    const allStudents = Object.entries(STUDENTS_DB).map(([usn, data]) => ({
-        usn,
-        name: data.name,
-        class: data.class,
-    }));
+export default function MarkAttendance({
+  onNavigate = () => {},
+  subjectName,
+  teacherClasses = [],   
+  students = {},
+  attendance = {}
+}) {
+  const todayDate = getTodayDateString();
+  const [attendanceList, setAttendanceList] = useState([]);
+  const [selectedClass, setSelectedClass] = useState("");
+  const [message, setMessage] = useState("");
+  const [isDirty, setIsDirty] = useState(false);
 
-    if (filterClass === 'All') {
-        return allStudents;
+  // Replace the old cleanClasses line with this:
+const cleanClasses = Array.isArray(teacherClasses) 
+    ? teacherClasses.flatMap(cls => typeof cls === 'string' ? cls.split(",") : cls).map(s => s.trim())
+    : (typeof teacherClasses === "string" ? teacherClasses.split(",").map(s => s.trim()) : []);
+
+  useEffect(() => {
+    if (cleanClasses.length > 0 && !selectedClass) {
+      setSelectedClass(cleanClasses[0]);
     }
-    return allStudents.filter(student => student.class === filterClass);
-};
+  }, [cleanClasses, selectedClass]);
 
-export default function MarkAttendance({ onNavigate, subjectName, teacherEmail }) {
-    const [attendanceList, setAttendanceList] = useState([]);
-    const [message, setMessage] = useState('');
-    const [isDirty, setIsDirty] = useState(false);
+  useEffect(() => {
+    if (!selectedClass) return;
+    const todaysSubjectAttendance = attendance[todayDate]?.[subjectName] || {};
     
-    // Get teacher's assigned classes
-    const teacherData = TEACHERS_DB[teacherEmail] || { classes: [] };
-    const teacherClasses = teacherData.classes || [];
-    
-    // Filter available classes to only show teacher's assigned classes
-    const availableClasses = teacherClasses.length > 0 
-        ? teacherClasses.sort() 
-        : [...new Set(Object.values(STUDENTS_DB).map(s => s.class))].sort();
-    
-    const [selectedClass, setSelectedClass] = useState(availableClasses[0] || '');
-    const todayDate = getTodayDateString();
+    const list = Object.entries(students)
+      .filter(([_, s]) => String(s.class) === String(selectedClass))
+      .map(([usn, s]) => ({
+        usn,
+        name: s.name,
+        status: todaysSubjectAttendance[usn]?.status || "Present"
+      }));
 
-    useEffect(() => {
-        const dateKey = todayDate;
-        const existingAttendance = ATTENDANCE_DB[dateKey]?.[subjectName] || {};
+    setAttendanceList(list);
+    setIsDirty(false);
+  }, [selectedClass, subjectName, students, attendance, todayDate]);
 
-        const initialList = getStudentList(selectedClass).map(student => {
-            const record = existingAttendance[student.usn];
-            return {
-                ...student,
-                status: record?.status || 'N/A'
-            };
-        });
+  const handleStatusChange = (usn, status) => {
+    setAttendanceList(prev => prev.map(s => (s.usn === usn ? { ...s, status } : s)));
+    setIsDirty(true);
+  };
 
-        setAttendanceList(initialList);
-        setIsDirty(false); // Reset dirty state on load
+  const markAllPresent = () => {
+    setAttendanceList(prev => prev.map(s => ({ ...s, status: "Present" })));
+    setIsDirty(true);
+  };
 
-    }, [subjectName, todayDate, selectedClass]);
+  const saveAttendance = () => {
+    attendance[todayDate] = attendance[todayDate] || {};
+    attendance[todayDate][subjectName] = attendance[todayDate][subjectName] || {};
+    attendanceList.forEach(s => {
+      attendance[todayDate][subjectName][s.usn] = { status: s.status };
+    });
+    setMessage(`Attendance saved for ${subjectName} (${selectedClass})`);
+    setIsDirty(false);
+    setTimeout(() => onNavigate("teacher-dashboard"), 1500);
+  };
 
-    const handleStatusChange = (usn, newStatus) => {
-        setAttendanceList(prevList =>
-            prevList.map(student =>
-                student.usn === usn ? { ...student, status: newStatus } : student
-            )
-        );
-        setIsDirty(true); // Mark form as dirty
-    };
+  if (cleanClasses.length === 0) return <p>No classes assigned.</p>;
 
-    const handleMarkAllPresent = () => {
-        const updatedList = attendanceList.map(student => ({
-            ...student,
-            status: 'Present'
-        }));
-        setAttendanceList(updatedList);
-        setIsDirty(true); // Enable the save button
-    };
+  return (
+    <div className="profile-container">
+      <div className="profile-card">
+        <button className="back-link" onClick={() => onNavigate("teacher-dashboard")}>← Back</button>
+        <h2 className="subject-details-title">Mark Attendance – {subjectName}</h2>
 
-    const handleSaveAttendance = () => {
-        const dateKey = todayDate;
-
-        if (!ATTENDANCE_DB[dateKey]) {
-            ATTENDANCE_DB[dateKey] = {};
-        }
-
-        if (!ATTENDANCE_DB[dateKey][subjectName]) {
-            ATTENDANCE_DB[dateKey][subjectName] = {};
-        }
-
-        attendanceList.forEach(student => {
-            ATTENDANCE_DB[dateKey][subjectName][student.usn] = {
-                status: student.status,
-                updatedBy: 'Teacher'
-            };
-        });
-
-        setMessage(`Attendance for ${subjectName} on ${dateKey} saved successfully!`);
-        setIsDirty(false); // Reset dirty state after saving
-        setTimeout(() => onNavigate('teacher-dashboard'), 3000); // Wait for notification to fade
-    };
-
-    const renderTable = (list) => (
-        <table className="themed-table">
-            <thead>
-                <tr>
-                    <th>USN</th>
-                    <th>Student Name</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {list.map((student) => (
-                    <tr key={student.usn}>
-                        <td>{student.usn}</td>
-                        <td>{student.name}</td>
-                        <td>
-                            <select
-                                value={student.status}
-                                onChange={(e) => handleStatusChange(student.usn, e.target.value)}
-                                className={`status-select ${student.status === 'Absent' ? 'status-absent' : 'status-present'}`}
-                            >
-                                <option value="Present">Present</option>
-                                <option value="Absent">Absent</option>
-                                <option value="N/A" disabled>N/A</option>
-                            </select>
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    );
-
-    return (
-        <div className="profile-container">
-            <div className="profile-card">
-                <button className="back-link" onClick={() => onNavigate("teacher-dashboard")} title="Back to Dashboard">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                </button>
-                <h2 className="subject-details-title">Mark Attendance: {subjectName} ({todayDate})</h2>
-
-                <div className="input-group" style={{ display: 'flex', gap: '15px', alignItems: 'center', marginBottom: '20px' }}>
-                    <img src={classIcon} alt="Select Class" className="input-icon" />
-                    <select
-                        id="class-selector"
-                        value={selectedClass}
-                        onChange={(e) => setSelectedClass(e.target.value)}
-                        className="student-input"
-                        style={{ maxWidth: '180px', flexGrow: 0 }}
-                    >
-                        {availableClasses.map(c => <option key={c} value={c}>{`Class ${c}`}</option>)}
-                    </select>
-
-                    <button
-                        className="subject-btn"
-                        onClick={handleMarkAllPresent}
-                        style={{ marginLeft: 'auto' }}
-                    >
-                        Mark All Present
-                    </button>
-                </div>
-
-                {message && <div className="notification-banner">{message}</div>}
-
-                {attendanceList.length > 0 ? (
-                    <>
-                        <div className="attendance-tables-wrapper">
-                            <div className="attendance-table-column">
-                                {renderTable(attendanceList)}
-                            </div>
-                        </div>
-
-                        <button
-                            className="subject-btn"
-                            onClick={handleSaveAttendance}
-                            disabled={!isDirty}
-                            style={{ 
-                                marginTop: '20px', 
-                                padding: '10px 20px', 
-                                background: '#4CAF50', 
-                                color: 'white', 
-                                border: 'none',
-                                opacity: !isDirty ? 0.6 : 1
-                            }}
-                        >
-                            Save Attendance
-                        </button>
-                    </>
-                ) : (
-                    <p>No students found.</p>
-                )}
-            </div>
+        <div style={{ display: "flex", gap: "15px", marginBottom: "20px" }}>
+          <img src={classIcon} alt="Class" width="40" className="input-icon"/>
+          <select
+            value={selectedClass}
+            onChange={e => setSelectedClass(e.target.value)}
+            className="student-input"
+          >
+            {/* 2. Map correctly creates 4 options */}
+            {cleanClasses.map(cls => (
+              <option key={cls} value={cls}>Class {cls}</option>
+            ))}
+          </select>
+          
         </div>
-    );
+
+        {message && <div className="notification-banner">{message}</div>}
+
+        {attendanceList.length > 0 ? (
+          <>
+            <table className="themed-table">
+              <thead>
+                <tr><th>USN</th><th>Name</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                {attendanceList.map(s => (
+                  <tr key={s.usn}>
+                    <td>{s.usn}</td>
+                    <td>{s.name}</td>
+                    <td>
+                      <select
+                        value={s.status}
+                        onChange={e => handleStatusChange(s.usn, e.target.value)}
+                        className={s.status === "Absent" ? "status-absent" : "status-present"}
+                      >
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button 
+              className="save-btn"
+              onClick={saveAttendance} 
+              disabled={!isDirty} 
+              style={{ 
+                opacity: isDirty ? 1 : 0.6 
+              }}
+            >
+              Save Attendance
+            </button>
+          </>
+        ) : (
+          <p>No students found for this class.</p>
+        )}
+      </div>
+    </div>
+  );
 }

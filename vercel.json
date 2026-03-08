@@ -1,8 +1,11 @@
 {
+  "version": 2,
+  "builds": [
+    { "src": "DB.js", "use": "@vercel/node" },
+    { "src": "package.json", "use": "@vercel/static-build" }
+  ],
   "rewrites": [
-    { 
-      "source": "/(.*)", 
-      "destination": "/index.html" 
-    }
+    { "source": "/api/(.*)", "destination": "/DB.js" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
