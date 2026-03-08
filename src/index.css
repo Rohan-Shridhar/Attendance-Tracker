@@ -478,7 +478,16 @@ html, body {
 }
 
 
-
+.save-btn{
+    margin-top: 20px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background-color: #4CAF50;
+    color:white;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+}
 .subject-btn {
     padding: 10px 14px;
     border-radius: 8px;
@@ -759,27 +768,22 @@ html, body {
     border-color: #ef9a9a;
 }
 
-/* fileName: index.css (Append these styles) */
-
-/* --- Side-by-Side Table Layout for Large Lists --- */
 .attendance-tables-wrapper {
     display: flex;
-    gap: 30px; /* Space between the two columns/tables */
+    gap: 30px;
     justify-content: space-between;
     margin-bottom: 20px;
 }
 
 .attendance-table-column {
-    /* Each column takes up half the space, allowing it to grow and shrink */
     flex: 1 1 50%; 
-    min-width: 300px; /* Minimum width to prevent tables from collapsing too much */
+    min-width: 300px; 
 }
 
-/* Responsive adjustment: Stack the tables on smaller screens */
 @media (max-width: 1000px) {
     .attendance-tables-wrapper {
         flex-direction: column;
-        gap: 40px; /* More vertical space when stacked */
+        gap: 40px;
     }
     .attendance-table-column {
         flex: 1 1 100%;
