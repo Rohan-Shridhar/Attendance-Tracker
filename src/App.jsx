@@ -88,7 +88,7 @@ function App() {
 
 
   if (!dbData || !attendance) {
-    return <div className="loading">Connecting to database...</div>;
+    return <div className="loading">Connecting to database...Use Chrome browser</div>;
   }
 
 
